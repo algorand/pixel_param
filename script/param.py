@@ -6,7 +6,7 @@ import hashlib
 
 from hashlib import sha256
 from consts import q
-from hash_to_field import hash_to_field
+from hash_to_field import hash_to_field, I2OSP
 from util import print_g1_hex, print_g2_hex, prepare_msg
 from opt_swu_g1 import map2curve_osswu
 from opt_swu_g2 import map2curve_osswu2
@@ -49,8 +49,7 @@ h = map2curve_osswu2(prepare_msg(key, ciphersuite))
 # generate hlistusing hash_to_group
 hlist =[]
 for i in range(d+1):
-    infos  = "H2G_h%c"%i
-    info  = bytes(infos, "ascii")
+    info  = b"H2G_h" + I2OSP(i,1)
     # expand the secret
     key = hkdf.hkdf_expand(pseudo_random_key=m, info=info, length=32, hash=hashlib.sha256)
     # hash to G2
