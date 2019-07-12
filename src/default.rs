@@ -1,6 +1,6 @@
 use crate::bls_sigs_ref_rs::SerDes;
-use crate::PubParam;
 use crate::serdes::PP_LEN_UNCOMPRESSED;
+use crate::PubParam;
 /// The default public parameters are generated
 /// with seed = PI_1000_DIGITS
 impl std::default::Default for PubParam {
@@ -15,6 +15,7 @@ impl std::default::Default for PubParam {
     }
 }
 
+/// this is the pre-computed public parameter (with default seed) in a serialized form.
 const DEFAULT_PARAM_STR: [u8; PP_LEN_UNCOMPRESSED] = [
     0x00, 0x20, 0x17, 0xf1, 0xd3, 0xa7, 0x31, 0x97, 0xd7, 0x94, 0x26, 0x95, 0x63, 0x8c, 0x4f, 0xa9,
     0xac, 0x0f, 0xc3, 0x68, 0x8c, 0x4f, 0x97, 0x74, 0xb9, 0x05, 0xa1, 0x4e, 0x3a, 0x3f, 0x17, 0x1b,
