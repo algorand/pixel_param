@@ -24,9 +24,12 @@ pub struct PubParam {
 ## Dependencies
 * This crate uses `HKDF`, instantiated with `SHA256` to extract and
 extend the seed.
+  * syntax:
+    * `HKDF-Extract(salt , seed) -> secret`
+    * `HKDF-Expand(secret, public_info, length_of_new_secret) -> new_secret`
 * This crate uses BLS' `hash_to_curve` function to hash an extended secret
 to a group element.
-
+  * syntax: `hash_to_group(input, ciphersuite) -> Gx`
 ## The procedure
 * Input: ciphersuite id, tentatively supports `0x00` and `0x01`;
 * Input: a seed from the upper level, needs to be at least `32` bytes long;
@@ -48,7 +51,7 @@ to a group element.
   `PubParam {CONST_D, ciphersuite, g2, h, hlist}`
 
 
-# functionalities
+# Functionalities
 * Get the default public parameter:
   ``` rust
   PubParam::default() -> PubParam;
@@ -71,7 +74,7 @@ to a group element.
   ``` rust
   const PP_LEN_COMPRESSED;        // size in bytes of public parameter, compressed
   const PP_LEN_UNCOMPRESSED;      // size in bytes of public parameter, uncompressed
-  fn get_size(&self) -> usize;    // same as above
+  fn get_size(&self, compressed: bool) -> usize;    // same as above
   fn serialize<W: Write>(&self, writer: &mut W, compressed: bool) -> Result<()>;
   fn deserialize<R: Read>(reader: &mut R) -> Result<PubParam>;
   ```
