@@ -53,6 +53,10 @@ pub type PixelG2 = pairing::bls12_381::G1;
 /// For deployment we use a depth = 32 which should be more than
 /// enough in practise.
 pub use constants::CONST_D;
+
+/// This array defines valid ciphersuite identifiers.
+pub use constants::VALID_CIPHERSUITE;
+
 use constants::*;
 
 /// Expose the length of public key.
@@ -82,13 +86,12 @@ impl PubParam {
         self.d
     }
 
-    /// Returns the `PixelG2` generator. Note: the generator will be different
-    /// from `bls12-381` curve's if randomized generator is used.
+    /// Returns the `PixelG2` generator.
     pub fn get_g2(&self) -> PixelG2 {
         self.g2
     }
 
-    /// Returns the `h` parmeter, i.e., the first `PixelG2` element of the public param.
+    /// Returns the `h` parmeter, i.e., the first `PixelG1` element of the public param.
     pub fn get_h(&self) -> PixelG1 {
         self.h
     }

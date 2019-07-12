@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.com/algorand/pixel_param.svg?token=cs332z4omsgc9ykLW8pu&branch=master)](https://travis-ci.com/algorand/pixel_param)
 
 
-A rust implementation for parameter generations of Pixel signature scheme
+A rust implementation for parameter generations of Pixel signature scheme. 
 
 ## Structure
 The public parameter consists of the following elements
