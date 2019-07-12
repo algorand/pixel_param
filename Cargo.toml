@@ -1,0 +1,12 @@
+[package]
+name = "pixel_param"
+version = "0.1.0"
+authors = ["zhenfei <zhenfei.zhang@hotmail.com>"]
+edition = "2018"
+
+
+[dependencies]
+pairing = { version = "0.14.3", git = "https://github.com/kwantam/pairing", features = [ "transmutable" ] }
+bls_sigs_ref-rs = { git = "https://github.com/kwantam/bls_sigs_ref"}
+hkdf = "0.7"
+sha2 = "0.8"
