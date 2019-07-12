@@ -59,7 +59,7 @@ use constants::*;
 pub use serdes::{PP_LEN_COMPRESSED, PP_LEN_UNCOMPRESSED};
 
 /// The public parameter consists of the following ...
-/// * g2: group generators for `PixelG2` group (may be randomized)
+/// * g2: group generators for `PixelG2` group
 /// * h: a `PixelG1` element,
 /// * hlist: D+1 PixelG1 elements `h_0, h_1, ..., h_d`
 #[derive(Clone)]
