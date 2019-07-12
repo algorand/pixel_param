@@ -33,9 +33,10 @@ fn test_param_serialization() {
         PP_LEN_UNCOMPRESSED,
         "length of blob is incorrect"
     );
-
+    println!("{:?}", buf);
     // deserialize a buffer into public parameter
     let pp_recover = PubParam::deserialize(&mut buf[..].as_ref()).unwrap();
     // makes sure that the keys match
     assert_eq!(pp, pp_recover);
+    assert!(false)
 }

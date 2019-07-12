@@ -143,7 +143,6 @@ impl PubParam {
         );
         // use hash to curve to get a group element
         let h = PixelG1::hash_to_curve(hkdf_output, ciphersuite);
-
         // generate hlist
         let mut hlist: Vec<PixelG1> = Vec::with_capacity(CONST_D + 1);
         for i in 0..=CONST_D {

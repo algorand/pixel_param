@@ -14,11 +14,11 @@ The public parameter consists of the following elements
 
 ``` Rust
 pub struct PubParam {
-    d: usize, // the depth of the time vector
+    d: usize,                       // the depth of the time vector
     ciphersuite: u8,
     g2: PixelG2,
-    h: PixelG1,                    // h
-    hlist: [PixelG1; CONST_D + 1], // h_0, h_1, ..., h_d
+    h: PixelG1,                     // h
+    hlist: [PixelG1; CONST_D + 1],  // h_0, h_1, ..., h_d
 }
 ```
 ## Dependencies
@@ -41,8 +41,39 @@ to a group element.
     * `t = HKDF-Expand(m, info, 32)`
     * `h = hash_to_group(t, ciphersuite)`
   4. generate `h_0 ... h_{d+1}` as follows:
-    * `info = "H2G_h_" | I2OSP(i)`
+    * `info = "H2G_h" | I2OSP(i)`
     * `t = HKDF-Expand(m, info, 32)`
     * `h = hash_to_group(t, ciphersuite)`
   5. output   
   `PubParam {CONST_D, ciphersuite, g2, h, hlist}`
+
+
+# functionalities
+* Get the default public parameter:
+  ``` rust
+  PubParam::default() -> PubParam;
+  ```
+  The default parameter is pre-computed using a seed that is (tentatively) set to
+  the first 1000 digits of `Pi`, and a ciphersuite identifier of `0x00`.
+
+* Get various elements from the public parameter:
+  ``` rust
+  fn get_d(&self) -> usize;
+  fn get_ciphersuite(&self) -> u8;
+  fn get_g2(&self) -> PixelG2 ;
+  fn get_h(&self) -> PixelG1;
+  fn get_hlist(&self) ->  [PixelG1; d+1];
+  ```
+
+* Serialization:
+  * each a public parameter is a blob: `|ciphersuite id| depth | g2 | h | hlist |`
+
+  ``` rust
+  const PP_LEN_COMPRESSED;        // size in bytes of public parameter, compressed
+  const PP_LEN_UNCOMPRESSED;      // size in bytes of public parameter, uncompressed
+  fn get_size(&self) -> usize;    // same as above
+  fn serialize<W: Write>(&self, writer: &mut W, compressed: bool) -> Result<()>;
+  fn deserialize<R: Read>(reader: &mut R) -> Result<PubParam>;
+  ```
+  The `reader` and `writer` is assumed
+  to have allocated sufficient memory, or an error will be returned.
