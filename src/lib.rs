@@ -17,7 +17,7 @@ use pairing::CurveProjective;
 use bls_sigs_ref_rs::HashToCurve;
 // use hkdf-sha256 to extract and expand a seed
 use hkdf::Hkdf;
-use sha2::Sha256;
+use sha2::Sha512;
 
 // implement the serdes trait
 mod serdes;
@@ -104,7 +104,7 @@ impl PubParam {
     /// This function initialize the parameter with a default seed
     /// which is tentatively set to PI_1000_DIGITS.
     pub fn init_without_seed() -> Self {
-        Self::init(PI_1000_DIGITS.as_ref(), 0).unwrap()
+        Self::init(SHA512_IV.as_ref(), 0).unwrap()
     }
 
     /// This function takes a seed, and a ciphersuite id, and outputs the
@@ -134,7 +134,7 @@ impl PubParam {
         }
         // instantiate the HKDF with a seed and a public salt.
         let salt = constants::DOM_SEP_PARAM_GEN;
-        let hk = Hkdf::<Sha256>::extract(Some(salt.as_ref()), &seed);
+        let hk = Hkdf::<Sha512>::extract(Some(salt.as_ref()), &seed);
 
         // generate h
         let info = b"H2G_h";
