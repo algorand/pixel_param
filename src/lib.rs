@@ -117,7 +117,7 @@ impl PubParam {
     ///     * `t = HKDF-Expand(m, info, 32)`
     ///     * `h = hash_to_group(t, ciphersuite)`
     /// 4. generate `h_0 ... h_{d+1}` as follows:
-    ///     * `info = "H2G_h_" | I2OSP(i)`
+    ///     * `info = "H2G_h" | I2OSP(i)`
     ///     * `t = HKDF-Expand(m, info, 32)`
     ///     * `h = hash_to_group(t, ciphersuite)`
     ///
