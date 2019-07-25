@@ -15,7 +15,7 @@ extern crate pairing;
 use pairing::CurveProjective;
 // use hash to curve functions from bls reference implementation
 use bls_sigs_ref_rs::HashToCurve;
-// use hkdf-sha256 to extract and expand a seed
+// use hkdf-sha512 to extract and expand a seed
 use hkdf::Hkdf;
 use sha2::Sha512;
 
