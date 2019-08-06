@@ -11,7 +11,7 @@ impl std::default::Default for PubParam {
             res.is_ok(),
             "Error deserialize public parameter from the default string!"
         );
-        res.unwrap()
+        res.unwrap().0
     }
 }
 
