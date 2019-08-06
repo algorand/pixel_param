@@ -8,4 +8,4 @@ edition = "2018"
 
 [dependencies]
 pixel_param = { path = "../../" }
-bls_sigs_ref-rs = { git = "https://github.com/kwantam/bls_sigs_ref"}
+# bls_sigs_ref-rs = { git = "https://github.com/kwantam/bls_sigs_ref"}

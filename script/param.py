@@ -10,7 +10,7 @@ from hash_to_field import hash_to_field, I2OSP
 from util import print_g1_hex, print_g2_hex, prepare_msg
 from opt_swu_g1 import map2curve_osswu
 from opt_swu_g2 import map2curve_osswu2
-from serdes import serialize
+from serdesZ import serialize
 from curve_ops import g1gen
 
 
@@ -78,6 +78,6 @@ for i in range(d+1):
     buf = buf + serialize(hlist[i], False)
 
 # write to the output
-f = open("test_vector/param_bin.txt", "wb")
+f = open("param_bin.txt", "wb")
 f.write(buf)
 f.close()

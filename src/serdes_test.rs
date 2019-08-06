@@ -1,7 +1,7 @@
 // This module implements some basic tests on
 // serialization and deserialization.
 
-use crate::bls_sigs_ref_rs::SerDes;
+use crate::serdes::PixelSerDes;
 use crate::serdes::{PP_LEN_COMPRESSED, PP_LEN_UNCOMPRESSED};
 use crate::PubParam;
 

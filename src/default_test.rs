@@ -1,5 +1,5 @@
-// use crate::bls_sigs_ref_rs::SerDes;
 use crate::constants::SHA512_IV;
+// use crate::serdes::PixelSerDes;
 use crate::PubParam;
 // basic sanity check to see if the default parameters are
 // generated from the seed
@@ -21,4 +21,5 @@ fn test_default_parameters() {
 
     assert_eq!(def_pp, pp_without_seed, "default parameter is not correct!");
     assert_eq!(def_pp, pp_with_seed, "default parameter is not correct!");
+    //    assert!(false)
 }

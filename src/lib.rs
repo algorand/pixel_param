@@ -8,7 +8,6 @@
 
 // this file defines the structures for the public parameter
 // and its associated methods
-extern crate bls_sigs_ref_rs;
 extern crate hkdf;
 extern crate pairing;
 
@@ -19,8 +18,10 @@ use bls_sigs_ref_rs::HashToCurve;
 use hkdf::Hkdf;
 use sha2::Sha512;
 
-// implement the serdes trait
-mod serdes;
+/// The trait to serialize and deserialize pixel group elements and
+/// public parameters. The encoding of group elements follows that
+/// of zcash spec.
+pub mod serdes;
 #[cfg(test)]
 mod serdes_test;
 
@@ -60,7 +61,7 @@ pub use constants::VALID_CIPHERSUITE;
 use constants::*;
 
 /// Expose the length of public key.
-pub use serdes::{PP_LEN_COMPRESSED, PP_LEN_UNCOMPRESSED};
+pub use serdes::{PixelSerDes, PP_LEN_COMPRESSED, PP_LEN_UNCOMPRESSED};
 
 /// The public parameter consists of the following ...
 /// * g2: group generators for `PixelG2` group

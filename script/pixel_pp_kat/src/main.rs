@@ -1,8 +1,6 @@
-extern crate bls_sigs_ref_rs;
 extern crate pixel_param;
 
-use bls_sigs_ref_rs::SerDes;
-use pixel_param::PubParam;
+use pixel_param::{PixelSerDes, PubParam};
 use std::fs::File;
 
 fn main() {
