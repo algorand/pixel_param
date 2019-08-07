@@ -1,4 +1,4 @@
-use crate::constants::{CONST_D, ERR_CIPHERSUITE, VALID_CIPHERSUITE};
+use crate::constants::{CONST_D, ERR_CIPHERSUITE, VALID_CIPHERSUITE, ERR_COMPRESS};
 use crate::{PixelG1, PixelG2, PubParam};
 use pairing::{bls12_381::*, CurveAffine, CurveProjective, EncodedPoint};
 use std::io::{Error, ErrorKind, Read, Result, Write};
@@ -8,7 +8,7 @@ pub const PP_LEN_COMPRESSED: usize = 3314;
 /// The length of the public parameter, in the uncompressed format.
 pub const PP_LEN_UNCOMPRESSED: usize = 6626;
 
-const ERR_COMPRESS: &str = "Compressness does not match";
+type Compressed = bool;
 
 /// Serialization support for pixel structures.
 /// This trait is the same as pixel_param::serdes::PixelSerDes.
@@ -21,16 +21,16 @@ pub trait PixelSerDes: Sized {
     /// * proof of possessions: compressed
     /// * secret keys: uncompressed
     /// * signatures: compressed
-    fn serialize<W: Write>(&self, writer: &mut W, compressed: bool) -> Result<()>;
+    fn serialize<W: Write>(&self, writer: &mut W, compressed: Compressed) -> Result<()>;
 
     /// Deserialize a struct; also returns a flag
     /// if the struct was compressed or not.
-    fn deserialize<R: Read>(reader: &mut R) -> Result<(Self, bool)>;
+    fn deserialize<R: Read>(reader: &mut R) -> Result<(Self, Compressed)>;
 }
 
 impl PixelSerDes for PixelG1 {
     /// Convert a PixelG1 point to a blob.
-    fn serialize<W: Write>(&self, writer: &mut W, compressed: bool) -> Result<()> {
+    fn serialize<W: Write>(&self, writer: &mut W, compressed: Compressed) -> Result<()> {
         let t = self.into_affine();
 
         // convert element into an (un)compressed byte string
@@ -51,7 +51,7 @@ impl PixelSerDes for PixelG1 {
 
     /// Deserialize a PixelG1 element from a blob.
     /// Returns an error if deserialization fails.
-    fn deserialize<R: Read>(reader: &mut R) -> Result<(Self, bool)> {
+    fn deserialize<R: Read>(reader: &mut R) -> Result<(Self, Compressed)> {
         // read into buf of compressed size
         let mut buf = vec![0u8; G2Compressed::size()];
         reader.read_exact(&mut buf)?;
@@ -69,7 +69,7 @@ impl PixelSerDes for PixelG1 {
             };
             Ok((g, true))
         } else if (buf[0] & 0x80) == 0x00 {
-            // first bit is 0 => compressed mode
+            // first bit is 0 => uncompressed mode
             // read the next uncompressed - compressed size
             let mut buf2 = vec![0u8; G2Uncompressed::size() - G2Compressed::size()];
             reader.read_exact(&mut buf2)?;
@@ -94,7 +94,7 @@ impl PixelSerDes for PixelG1 {
 
 impl PixelSerDes for PixelG2 {
     /// Convert a PixelG1 point to a blob.
-    fn serialize<W: Write>(&self, writer: &mut W, compressed: bool) -> Result<()> {
+    fn serialize<W: Write>(&self, writer: &mut W, compressed: Compressed) -> Result<()> {
         let t = self.into_affine();
         // convert element into an (un)compressed byte string
         let buf = {
@@ -114,7 +114,7 @@ impl PixelSerDes for PixelG2 {
 
     /// Deserialize a PixelG2 element from a blob.
     /// Returns an error if deserialization fails.
-    fn deserialize<R: Read>(reader: &mut R) -> Result<(Self, bool)> {
+    fn deserialize<R: Read>(reader: &mut R) -> Result<(Self, Compressed)> {
         // read into buf of compressed size
         let mut buf = vec![0u8; G1Compressed::size()];
         reader.read_exact(&mut buf)?;
@@ -132,7 +132,7 @@ impl PixelSerDes for PixelG2 {
             };
             Ok((g, true))
         } else if (buf[0] & 0x80) == 0x00 {
-            // first bit is 0 => compressed mode
+            // first bit is 0 => uncompressed mode
             // read the next uncompressed - compressed size
             let mut buf2 = vec![0u8; G1Uncompressed::size() - G1Compressed::size()];
             reader.read_exact(&mut buf2)?;
@@ -163,23 +163,23 @@ impl PixelSerDes for PubParam {
     /// Returns an error if ciphersuite id is invalid or serialization fails.
     fn serialize<W: Write>(&self, writer: &mut W, compressed: bool) -> Result<()> {
         // check the cipher suite id
-        if !VALID_CIPHERSUITE.contains(&self.get_ciphersuite()) {
+        if !VALID_CIPHERSUITE.contains(&self.ciphersuite()) {
             return Err(Error::new(ErrorKind::InvalidData, ERR_CIPHERSUITE));
         }
         // first byte is the ciphersuite id
-        let mut buf: Vec<u8> = vec![self.get_ciphersuite()];
+        let mut buf: Vec<u8> = vec![self.ciphersuite()];
 
         // Second byte is the time depth
-        buf.push(self.get_d() as u8);
+        buf.push(self.depth() as u8);
 
         // serialize g2
-        self.get_g2().serialize(&mut buf, compressed)?;
+        self.g2().serialize(&mut buf, compressed)?;
 
         // serialize h
-        self.get_h().serialize(&mut buf, compressed)?;
+        self.h().serialize(&mut buf, compressed)?;
 
         // serialize hlist
-        for e in self.get_hlist().iter() {
+        for e in self.hlist().iter() {
             e.serialize(&mut buf, compressed)?;
         }
         // format the output
@@ -233,7 +233,7 @@ impl PixelSerDes for PubParam {
         // finished
         Ok((
             PubParam {
-                d: depth,
+                depth,
                 ciphersuite: constants[0],
                 g2,
                 h,

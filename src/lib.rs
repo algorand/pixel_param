@@ -69,7 +69,7 @@ pub use serdes::{PixelSerDes, PP_LEN_COMPRESSED, PP_LEN_UNCOMPRESSED};
 /// * hlist: D+1 PixelG1 elements `h_0, h_1, ..., h_d`
 #[derive(Clone)]
 pub struct PubParam {
-    d: usize, // the depth of the time vector
+    depth: usize, // the depth of the time vector
     ciphersuite: u8,
     g2: PixelG2,
     h: PixelG1,                    // h
@@ -78,27 +78,27 @@ pub struct PubParam {
 
 impl PubParam {
     /// get the cipher suite id from the public param
-    pub fn get_ciphersuite(&self) -> u8 {
+    pub fn ciphersuite(&self) -> u8 {
         self.ciphersuite
     }
 
     /// Returns the depth of the time stamp.
-    pub fn get_d(&self) -> usize {
-        self.d
+    pub fn depth(&self) -> usize {
+        self.depth
     }
 
     /// Returns the `PixelG2` generator.
-    pub fn get_g2(&self) -> PixelG2 {
+    pub fn g2(&self) -> PixelG2 {
         self.g2
     }
 
     /// Returns the `h` parmeter, i.e., the first `PixelG1` element of the public param.
-    pub fn get_h(&self) -> PixelG1 {
+    pub fn h(&self) -> PixelG1 {
         self.h
     }
 
     /// Returns the list of `PixelG1` elements of the public param.
-    pub fn get_hlist(&self) -> [PixelG1; CONST_D + 1] {
+    pub fn hlist(&self) -> [PixelG1; CONST_D + 1] {
         self.hlist
     }
 
@@ -166,7 +166,7 @@ impl PubParam {
 
         // format the ouput
         Ok(PubParam {
-            d: CONST_D,
+            depth: CONST_D,
             ciphersuite,
             g2: PixelG2::one(),
             h,
@@ -180,7 +180,7 @@ impl PubParam {
     /// where ciphersuite id is 1 byte and depth is 1 byte.
     /// Return 2 + serial ...
     //  This code is the same as the constant PP_LEN_(UN)COMPRESSED
-    pub fn get_size(&self, compressed: bool) -> usize {
+    pub fn size(&self, compressed: bool) -> usize {
         let mut len = 0;
         let pixel_g1_size = 96;
 
@@ -188,7 +188,7 @@ impl PubParam {
         // this will be a G1 and a G2
         len += 144;
         // hv length = |hv| * pixel g1 size
-        len += (self.get_d() + 1) * pixel_g1_size;
+        len += (self.depth() + 1) * pixel_g1_size;
         if compressed {
             // additional 2 bytes for ciphersuite and depth
             len + 2
@@ -212,7 +212,7 @@ impl std::fmt::Debug for PubParam {
              g2 : {:#?}\n\
              h  : {:#?}\n",
             //            self.g1.into_affine(),
-            self.d,
+            self.depth,
             self.ciphersuite,
             self.g2.into_affine(),
             self.h.into_affine(),
@@ -227,10 +227,10 @@ impl std::fmt::Debug for PubParam {
 /// convenient function to compare public parameter objects
 impl std::cmp::PartialEq for PubParam {
     fn eq(&self, other: &Self) -> bool {
-        if self.d != other.d {
+        if self.depth != other.depth {
             return false;
         }
-        for i in 0..=self.d {
+        for i in 0..=self.depth {
             if self.hlist[i] != other.hlist[i] {
                 return false;
             }

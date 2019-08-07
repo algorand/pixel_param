@@ -14,7 +14,7 @@ pub const DOM_SEP_PARAM_GEN: &str = "Pixel public parameter generation";
 // Error messages
 pub const ERR_SEED_TOO_SHORT: &str = "The seed length is too short";
 pub const ERR_CIPHERSUITE: &str = "Invalid ciphersuite ID";
-
+pub const ERR_COMPRESS: &str = "Compressness does not match";
 // This was the old seed.
 // /// The seed we will be using for default public parameter generation
 // /// is tentatively set to the 1000 digits of pi
