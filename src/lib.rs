@@ -11,9 +11,9 @@
 extern crate hkdf;
 extern crate pairing;
 
+use pairing::hash_to_curve::HashToCurve;
 use pairing::CurveProjective;
-// use hash to curve functions from bls reference implementation
-use bls_sigs_ref_rs::HashToCurve;
+
 // use hkdf-sha512 to extract and expand a seed
 use hkdf::Hkdf;
 use sha2::Sha512;
@@ -103,7 +103,7 @@ impl PubParam {
     }
 
     /// This function initialize the parameter with a default seed
-    /// which is tentatively set to PI_1000_DIGITS.
+    /// which is tentatively set to SHA512's initial vector
     pub fn init_without_seed() -> Self {
         Self::init(SHA512_IV.as_ref(), 0).unwrap()
     }
@@ -145,6 +145,7 @@ impl PubParam {
             hk.expand(info, &mut hkdf_output).is_ok(),
             "Error getting output from HKDF"
         );
+        println!("{:02x?}", hkdf_output);
         // use hash to curve to get a group element
         let h = PixelG1::hash_to_curve(hkdf_output, ciphersuite);
         // generate hlist

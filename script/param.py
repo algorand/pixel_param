@@ -3,11 +3,11 @@ sys.path.append("/Users/zhenfei/Documents/GitHub/bls_sigs_ref-fork/python-impl")
 
 import hkdf
 import hashlib
-
+import filecmp
 from hashlib import sha512
 from consts import q
-from hash_to_field import hash_to_field, I2OSP
-from util import print_g1_hex, print_g2_hex, prepare_msg
+from hash_to_field import  I2OSP
+from util import print_g1_hex, print_g2_hex
 from opt_swu_g1 import map2curve_osswu
 from opt_swu_g2 import map2curve_osswu2
 from serdesZ import serialize
@@ -46,7 +46,7 @@ seed = bytes([
     0x1f, 0x83, 0xd9, 0xab, 0xfb, 0x41, 0xbd, 0x6b, 0x5b, 0xe0, 0xcd, 0x19, 0x13, 0x7e, 0x21, 0x79,
 ])
 
-ciphersuite = 0
+ciphersuite = b"\0"
 d = 32
 
 # extract the secret m
@@ -57,7 +57,7 @@ info = bytes("H2G_h", "ascii")
 # expand the secret
 key = hkdf.hkdf_expand(pseudo_random_key=m, info=info, length=32, hash=hashlib.sha512)
 # hash to G2
-h = map2curve_osswu2(prepare_msg(key, ciphersuite))
+h = map2curve_osswu2(key, ciphersuite)
 
 # generate hlistusing hash_to_group
 hlist =[]
@@ -66,7 +66,7 @@ for i in range(d+1):
     # expand the secret
     key = hkdf.hkdf_expand(pseudo_random_key=m, info=info, length=32, hash=hashlib.sha512)
     # hash to G2
-    hi = map2curve_osswu2(prepare_msg(key, ciphersuite))
+    hi = map2curve_osswu2(key, ciphersuite)
     hlist.append(hi)
 
 # formulate the outputs
@@ -78,6 +78,8 @@ for i in range(d+1):
     buf = buf + serialize(hlist[i], False)
 
 # write to the output
-f = open("param_bin.txt", "wb")
+f = open("kat_python.txt", "wb")
 f.write(buf)
 f.close()
+
+assert filecmp.cmp("kat_python.txt", "kat.txt")
