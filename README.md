@@ -6,7 +6,7 @@ A rust implementation for parameter generations of Pixel signature scheme.
 
 ## Structure
 The public parameter consists of the following elements
-* `d`: the depth of the time tree, one byte
+* `depth`: the depth of the time tree, one byte
 * `ciphersuite`: the ciphersuite id, one byte
 * `g2`: the group generator for PixelG2 group
 * `h`: a PixelG1 element,
@@ -14,7 +14,7 @@ The public parameter consists of the following elements
 
 ``` Rust
 pub struct PubParam {
-    d: usize,                       // the depth of the time vector
+    depth: usize,                       // the depth of the time vector
     ciphersuite: u8,
     g2: PixelG2,
     h: PixelG1,                     // h
@@ -97,11 +97,11 @@ to a group element.
 
 * Get various elements from the public parameter:
   ``` rust
-  fn get_d(&self) -> usize;
-  fn get_ciphersuite(&self) -> u8;
-  fn get_g2(&self) -> PixelG2 ;
-  fn get_h(&self) -> PixelG1;
-  fn get_hlist(&self) ->  [PixelG1; d+1];
+  fn depth(&self) -> usize;
+  fn ciphersuite(&self) -> u8;
+  fn g2(&self) -> PixelG2 ;
+  fn h(&self) -> PixelG1;
+  fn hlist(&self) ->  [PixelG1; d+1];
   ```
 
 * Serialization:
@@ -110,9 +110,11 @@ to a group element.
   ``` rust
   const PP_LEN_COMPRESSED;        // size in bytes of public parameter, compressed
   const PP_LEN_UNCOMPRESSED;      // size in bytes of public parameter, uncompressed
-  fn get_size(&self, compressed: bool) -> usize;    // same as above
+  fn size(&self, compressed: bool) -> usize;    // same as above
   fn serialize<W: Write>(&self, writer: &mut W, compressed: bool) -> Result<()>;
-  fn deserialize<R: Read>(reader: &mut R) -> Result<PubParam>;
+  fn deserialize<R: Read>(reader: &mut R) -> Result<(PubParam, bool)>;
   ```
   The `reader` and `writer` is assumed
   to have allocated sufficient memory, or an error will be returned.
+  The deserialize function will also return a flag where the parameter blob
+  was compressed or not.
