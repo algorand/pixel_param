@@ -1,6 +1,7 @@
 /target
 **/*.rs.bk
 Cargo.lock
-script/kat_python.txt
-script/kat_rust.txt
-script/pixel_pp_kat/target
+kat_python.txt
+kat_rust.txt
+test_vector/target/
+__pycache__

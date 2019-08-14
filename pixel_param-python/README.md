@@ -7,5 +7,3 @@ To run the cross checks:
 * `python param.py`: this will generate a parameter set with a default seed = PI_1000_DIGITS, using
 python codes. The parameters are serialized (uncompressed) and stored in `kat_python.txt`. It
 should match the `kat.txt` that is provided.
-* `cd pixel_pp_kat` and `cargo run`: this will also generate a parameter set with a default seed = PI_1000_DIGITS, using Rust code.  The parameters are serialized (uncompressed) and stored in `kat_rust.txt` in the script folder. It
-should also match the `kat.txt` that is provided.

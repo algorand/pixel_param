@@ -30,6 +30,8 @@ extend the seed.
 * This crate uses BLS' `hash_to_curve` function to hash an extended secret
 to a group element.
   * syntax: `hash_to_group(input, ciphersuite) -> Gx`
+  * This function has been refactored to the pairing library.
+  
 ## The procedure
 * Input: ciphersuite id, tentatively supports `0x00` and `0x01`;
 * Input: a seed from the upper level, needs to be at least `32` bytes long;
@@ -44,7 +46,7 @@ to a group element.
     * `t = HKDF-Expand(m, info, 32)`
     * `h = hash_to_group(t, ciphersuite)`
   4. generate `h_0 ... h_{d+1}` as follows:
-    * `info = "H2G_h" | I2OSP(i)`
+    * `info = "H2G_h" | I2OSP(i,1)`
     * `t = HKDF-Expand(m, info, 32)`
     * `h = hash_to_group(t, ciphersuite)`
   5. output   
