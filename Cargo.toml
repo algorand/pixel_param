@@ -6,6 +6,6 @@ edition = "2018"
 
 
 [dependencies]
-pairing = { version = "0.15", git = "ssh://git@github.com/algorand/pairing-fork" }
+pairing = { version = "0.15", git = "https://github.com/algorand/pairing-fork"}
 hkdf = "0.7"
 sha2 = "0.8"

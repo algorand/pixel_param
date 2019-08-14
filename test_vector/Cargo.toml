@@ -7,5 +7,4 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-pixel_param = { path = "../../" }
-# bls_sigs_ref-rs = { git = "https://github.com/kwantam/bls_sigs_ref"}
+pixel_param = { path = "../" }

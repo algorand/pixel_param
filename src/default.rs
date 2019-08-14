@@ -1,8 +1,7 @@
-use crate::serdes::PixelSerDes;
-use crate::serdes::PP_LEN_UNCOMPRESSED;
-use crate::PubParam;
+use crate::{PubParam, SerDes, PP_LEN_UNCOMPRESSED};
+
 /// The default public parameters are generated
-/// with seed = PI_1000_DIGITS
+/// with seed = SHA512_IV
 impl std::default::Default for PubParam {
     fn default() -> Self {
         let mut buf = DEFAULT_PARAM_STR;

@@ -61,7 +61,7 @@ pub use constants::VALID_CIPHERSUITE;
 use constants::*;
 
 /// Expose the length of public key.
-pub use serdes::{PixelSerDes, PP_LEN_COMPRESSED, PP_LEN_UNCOMPRESSED};
+pub use serdes::{SerDes, PP_LEN_COMPRESSED, PP_LEN_UNCOMPRESSED};
 
 /// The public parameter consists of the following ...
 /// * g2: group generators for `PixelG2` group
@@ -118,7 +118,7 @@ impl PubParam {
     ///     * `t = HKDF-Expand(m, info, 32)`
     ///     * `h = hash_to_group(t, ciphersuite)`
     /// 4. generate `h_0 ... h_{d+1}` as follows:
-    ///     * `info = "H2G_h" | I2OSP(i)`
+    ///     * `info = "H2G_h" | I2OSP(i, 1)`
     ///     * `t = HKDF-Expand(m, info, 32)`
     ///     * `h = hash_to_group(t, ciphersuite)`
     ///
@@ -145,7 +145,6 @@ impl PubParam {
             hk.expand(info, &mut hkdf_output).is_ok(),
             "Error getting output from HKDF"
         );
-        println!("{:02x?}", hkdf_output);
         // use hash to curve to get a group element
         let h = PixelG1::hash_to_curve(hkdf_output, ciphersuite);
         // generate hlist

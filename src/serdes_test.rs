@@ -1,9 +1,7 @@
 // This module implements some basic tests on
 // serialization and deserialization.
 
-use crate::serdes::PixelSerDes;
-use crate::serdes::{PP_LEN_COMPRESSED, PP_LEN_UNCOMPRESSED};
-use crate::PubParam;
+use crate::{PubParam, SerDes, PP_LEN_COMPRESSED, PP_LEN_UNCOMPRESSED};
 
 #[test]
 fn test_param_serialization() {
