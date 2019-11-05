@@ -14,7 +14,7 @@ pub const DOM_SEP_PARAM_GEN: &str = "Pixel public parameter generation";
 // Error messages
 pub const ERR_SEED_TOO_SHORT: &str = "The seed length is too short";
 pub const ERR_CIPHERSUITE: &str = "Invalid ciphersuite ID";
-pub const ERR_COMPRESS: &str = "Compressness does not match";
+// pub const ERR_COMPRESS: &str = "Compressness does not match";
 
 /// The seed we will be using for the default public parameter generation
 /// is set to the same as the SHA512's initial vector.

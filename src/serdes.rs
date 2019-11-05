@@ -1,4 +1,4 @@
-use crate::constants::{CONST_D, ERR_CIPHERSUITE, ERR_COMPRESS, VALID_CIPHERSUITE};
+use crate::constants::{CONST_D, ERR_CIPHERSUITE, VALID_CIPHERSUITE};
 use crate::{PixelG1, PixelG2, PubParam};
 pub use pairing::serdes::SerDes;
 use pairing::CurveProjective;
@@ -48,7 +48,7 @@ impl SerDes for PubParam {
     /// bytes => `|ciphersuite id| depth | g2 | h | hlist |`
     ///
     /// Returns an error if deserialization fails.
-    fn deserialize<R: Read>(reader: &mut R) -> Result<(Self, Compressed)> {
+    fn deserialize<R: Read>(reader: &mut R, comp: Compressed) -> Result<(Self)> {
         // constants stores id and the depth
         let mut constants: [u8; 2] = [0u8; 2];
 
@@ -66,36 +66,27 @@ impl SerDes for PubParam {
         }
 
         // read into g2
-        let (g2, compressed1) = PixelG2::deserialize(reader)?;
+        let g2 = PixelG2::deserialize(reader, comp)?;
 
         // read into h
-        let (h, compressed2) = PixelG1::deserialize(reader)?;
-        if compressed1 != compressed2 {
-            return Err(Error::new(ErrorKind::InvalidData, ERR_COMPRESS));
-        }
+        let h = PixelG1::deserialize(reader, comp)?;
 
         // read into hlist
         let mut hlist: Vec<PixelG1> = vec![];
         for _i in 0..=depth {
-            let (tmp, compressed2) = PixelG1::deserialize(reader)?;
-            if compressed1 != compressed2 {
-                return Err(Error::new(ErrorKind::InvalidData, ERR_COMPRESS));
-            }
+            let tmp = PixelG1::deserialize(reader, comp)?;
 
             hlist.push(tmp);
         }
         let mut hlist_array: [PixelG1; CONST_D + 1] = [PixelG1::zero(); CONST_D + 1];
         hlist_array.copy_from_slice(&hlist);
         // finished
-        Ok((
-            PubParam {
-                depth,
-                ciphersuite: constants[0],
-                g2,
-                h,
-                hlist: hlist_array,
-            },
-            compressed1,
-        ))
+        Ok(PubParam {
+            depth,
+            ciphersuite: constants[0],
+            g2,
+            h,
+            hlist: hlist_array,
+        })
     }
 }

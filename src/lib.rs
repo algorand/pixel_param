@@ -9,7 +9,7 @@
 // this file defines the structures for the public parameter
 // and its associated methods
 extern crate hkdf;
-extern crate pairing;
+extern crate pairing_plus as pairing;
 
 use pairing::hash_to_curve::HashToCurve;
 use pairing::CurveProjective;
@@ -146,7 +146,7 @@ impl PubParam {
             "Error getting output from HKDF"
         );
         // use hash to curve to get a group element
-        let h = PixelG1::hash_to_curve(hkdf_output, ciphersuite);
+        let h = PixelG1::hash_to_curve(hkdf_output, &[ciphersuite]);
         // generate hlist
         let mut hlist: Vec<PixelG1> = Vec::with_capacity(CONST_D + 1);
         for i in 0..=CONST_D {
@@ -158,7 +158,7 @@ impl PubParam {
                 "Error getting output from HKDF"
             );
             // use hash to curve to get a group element
-            let hi = PixelG1::hash_to_curve(hkdf_output, ciphersuite);
+            let hi = PixelG1::hash_to_curve(hkdf_output, &[ciphersuite]);
             hlist.push(hi);
         }
         let mut hlist_array: [PixelG1; CONST_D + 1] = [PixelG1::zero(); CONST_D + 1];
