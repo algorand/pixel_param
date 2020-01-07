@@ -48,7 +48,7 @@ impl SerDes for PubParam {
     /// bytes => `|ciphersuite id| depth | g2 | h | hlist |`
     ///
     /// Returns an error if deserialization fails.
-    fn deserialize<R: Read>(reader: &mut R, comp: Compressed) -> Result<(Self)> {
+    fn deserialize<R: Read>(reader: &mut R, comp: Compressed) -> Result<Self> {
         // constants stores id and the depth
         let mut constants: [u8; 2] = [0u8; 2];
 

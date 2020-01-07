@@ -6,7 +6,8 @@ edition = "2018"
 
 
 [dependencies]
-#pairing = { version = "0.15", git = "https://github.com/algorand/pairing-fork"}
-pairing-plus = "0.17"
+#pairing-plus = {path = "../pairing-plus"}
+pairing-plus = {git = "https://github.com/algorand/pairing-plus"}
+#pairing-plus = "0.17"
 hkdf = "0.7"
 sha2 = "0.8"
